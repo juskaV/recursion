@@ -94,7 +94,7 @@
       (my-range (- up-to 1)))))
 
 (defn tails [a-seq]
-  (if (empty? a-seq) 
+  (if (empty? a-seq)
      `(())
      (cons
        (seq a-seq)
@@ -109,16 +109,37 @@
        (inits (pop a-seq)))))
 
 (defn rotations [a-seq]
-  [:-])
+  (cond
+    (empty? a-seq) '(())
+    :else (rotate-times a-seq (count a-seq))))
+
+(defn rotate-times [a-seq times]
+   (if (= times 1) (list a-seq)
+      (cons
+        (seq a-seq) (rotate-times (concat (rest a-seq) (take 1 a-seq)) (- times 1)))))
+
 
 (defn my-frequencies-helper [freqs a-seq]
-  [:-])
+  (if (empty? a-seq)
+    freqs
+    (if (contains? freqs (first a-seq))
+       (my-frequencies-helper (update-in freqs [(first a-seq)] inc) (rest a-seq))
+       (my-frequencies-helper (conj {(first a-seq) 1} freqs) (rest a-seq)))))
 
 (defn my-frequencies [a-seq]
-  [:-])
+  (my-frequencies-helper {} a-seq))
+
+(defn un-frequencies-helper [a-map key-seq]
+  (if (empty? key-seq)
+     key-seq
+     (concat
+       (repeat (get a-map (first key-seq)) (first key-seq)) ;repeat first map key by respective value
+       (un-frequencies-helper a-map (rest key-seq))))) ;recur by rest keys
 
 (defn un-frequencies [a-map]
-  [:-])
+  (un-frequencies-helper a-map (map key a-map)))
+
+
 
 (defn my-take [n coll]
   [:-])
