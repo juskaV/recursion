@@ -140,21 +140,36 @@
   (un-frequencies-helper a-map (map key a-map)))
 
 
-
 (defn my-take [n coll]
-  [:-])
+  (cond
+     (<= n 0) ()
+     (> n (count coll)) (concat (list (first coll)) (my-take (count (rest coll)) (rest coll)))
+     :else (concat (list (first coll)) (my-take (- n 1) (rest coll)))))
 
 (defn my-drop [n coll]
-  [:-])
+  (cond
+    (>= n 1) (my-drop (- n 1) (rest coll))
+    :else coll))
 
 (defn halve [a-seq]
-  [:-])
+  (let [halfway (int (/ (count a-seq) 2))]
+    (vector
+       (my-take halfway a-seq)
+       (my-drop halfway a-seq))))
 
 (defn seq-merge [a-seq b-seq]
-  [:-])
+   (cond
+     (empty? a-seq) b-seq
+     (empty? b-seq) a-seq
+     :else (if (< (first a-seq) (first b-seq))
+             (concat (list (first a-seq)) (seq-merge (rest a-seq) b-seq))
+             (concat (list (first b-seq)) (seq-merge a-seq (rest b-seq))))))
 
 (defn merge-sort [a-seq]
-  [:-])
+  (let [[first-half last-half] (halve a-seq)
+         first-sorted (cond (> 2 (count first-half)) first-half :else (merge-sort first-half))
+         last-sorted  (cond (> 2 (count last-half)) last-half :else (merge-sort last-half))]
+    (seq-merge first-sorted last-sorted)))
 
 (defn split-into-monotonics [a-seq]
   [:-])
